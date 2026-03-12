@@ -35,7 +35,7 @@ jobs:
       run: npx playwright install --with-deps
     - name: Set up Database
       run: |
-        psql -h localhost -U postgres -d alumni_db -f DATABASE.sql
+        psql -h localhost -U postgres -d alumni_db -f database.sql
       env:
         PGPASSWORD: password
     - name: Start Server

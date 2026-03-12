@@ -33,7 +33,7 @@ CREATE TABLE upsealumni (
   suffix VARCHAR(10),
   gender genders,
   student_number VARCHAR(20) NOT NULL UNIQUE,
-  entry_date date,
+  entry_date date NOT NULL,
   current_email VARCHAR(100) NOT NULL,
   phone_number VARCHAR(20) NOT NULL, 
   current_address VARCHAR(200),

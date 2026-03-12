@@ -219,7 +219,8 @@ async function addAlumni() {
       body: JSON.stringify(data)
     });
     errorMsgParsing = {}
-    errorMsgParsing["enum genders"] = "Invalid input for gender"
+    errorMsgParsing["enum genders"] = "Invalid input for gender" 
+    errorMsgParsing["null value in column \"entry_date\""] = "Please add entry date"
     errorMsgParsing["type date"] = "Please follow prescribed format for date"
     errorMsgParsing["violates check constraint \"email_format\""] = "Please input a valid email address"
     errorMsgParsing["phone_number_format"] = "Please input a valid number"

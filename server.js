@@ -191,7 +191,7 @@ app.post("/add-alumni", async (req, res) => {
     await client.query("COMMIT");
     resSql = alumniResult.rows[0]
     resSql["error"] = "None"
-    res.json();
+    res.json(resSql);
 
   } catch (err) {
     await client.query("ROLLBACK");
