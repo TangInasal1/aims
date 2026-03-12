@@ -63,7 +63,7 @@ app.post("/add-alumni", async (req, res) => {
       [email, password, role_id]
     );
 
-    const account_id = accountResult.rows[0].account_id;
+    // const account_id = accountResult.rows[0].account_id;
 
     const alumniResult = await client.query(
       `INSERT INTO upsealumni
@@ -77,10 +77,9 @@ app.post("/add-alumni", async (req, res) => {
         entry_date,
         current_email, 
         phone_number, 
-        current_address,
-        account_id
+        current_address
         )
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
        RETURNING *`,
       [
         last_name,
@@ -93,7 +92,6 @@ app.post("/add-alumni", async (req, res) => {
         current_email,
         phone_number,
         current_address,
-        account_id
       ]
     );
     const alumni_id = alumniResult.rows[0].alumni_id;
@@ -191,8 +189,9 @@ app.post("/add-alumni", async (req, res) => {
     }
     
     await client.query("COMMIT");
-
-    res.json(alumniResult.rows[0]);
+    resSql = alumniResult.rows[0]
+    resSql["error"] = "None"
+    res.json();
 
   } catch (err) {
     await client.query("ROLLBACK");

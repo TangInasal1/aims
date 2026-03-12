@@ -117,8 +117,7 @@ async function addAlumni() {
         : null;
 
     const year_started =
-      yearStartedInput ? parseInt(yearStartedInput) : null;
-
+      parseInt(yearStartedInput) ? parseInt(yearStartedInput) > 999 ? parseInt(yearStartedInput) :"wrong" :null;
     const selects = row.querySelectorAll("select");
 
     const semester_started =
@@ -149,8 +148,12 @@ async function addAlumni() {
     document.querySelectorAll("#employment-container .employment-row")
   )
     .map(row => {
-      const employer = row.querySelector('input[placeholder="Employer"]').value.trim();
-      const position = row.querySelector('input[placeholder="Position"]').value.trim();
+      const employer = row.querySelector('input[placeholder="Employer"]').value.trim() === "" 
+        ? null 
+        : row.querySelector('input[placeholder="Employer"]').value.trim();
+      const position = row.querySelector('input[placeholder="Position"]').value.trim() === "" 
+        ? null
+        : row.querySelector('input[placeholder="Position"]').value.trim();
 
       const dateInputs = row.querySelectorAll('input[placeholder="MM/YYYY"]');
 
@@ -158,7 +161,8 @@ async function addAlumni() {
       const endRaw = dateInputs[1]?.value || "";
 
       const convertToSQLDate = (val) => {
-        if (!val || !val.includes("/")) return null;
+        if (!val ) return null;
+        if (!val.includes("/")) return val;
         const [month, year] = val.split("/");
         return `${year}-${month.padStart(2, "0")}-01`;
       };
@@ -176,7 +180,6 @@ async function addAlumni() {
       };
     })
     .filter(Boolean);
-
   const alumniDegs = graduationInfo.map(g => ({
     degree_name: g.degree_name
   }));
@@ -198,11 +201,11 @@ async function addAlumni() {
     middle_name: "",
     suffix: "",
     gender: form.querySelector('input[placeholder="Gender"]').value,
-    student_number: form.querySelector('input[placeholder="xxxx-xxxxx"]').value,
-    entry_date: form.querySelector('input[placeholder="DD/MM/YYYY"]').value,
-    current_email: userEmail,
-    phone_number: form.querySelector('input[placeholder="Your Number"]').value,
-    current_address: form.querySelector('input[placeholder="Your Home Address"]').value,
+    student_number: form.querySelector('input[placeholder="xxxx-xxxxx"]').value ? form.querySelector('input[placeholder="xxxx-xxxxx"]').value:null,
+    entry_date: form.querySelector('input[placeholder="DD/MM/YYYY"]').value ? form.querySelector('input[placeholder="DD/MM/YYYY"]').value : null,
+    current_email: userEmail ? userEmail : null,
+    phone_number: form.querySelector('input[placeholder="Your Number"]').value ? form.querySelector('input[placeholder="Your Number"]').value : null,
+    current_address: form.querySelector('input[placeholder="Your Home Address"]').value ? form.querySelector('input[placeholder="Your Home Address"]').value : null,
     graduationInfo,
     employmentHist,
     alumniDegs,
@@ -215,10 +218,40 @@ async function addAlumni() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
     });
-
+    errorMsgParsing = {}
+    errorMsgParsing["enum genders"] = "Invalid input for gender"
+    errorMsgParsing["type date"] = "Please follow prescribed format for date"
+    errorMsgParsing["violates check constraint \"email_format\""] = "Please input a valid email address"
+    errorMsgParsing["phone_number_format"] = "Please input a valid number"
+    errorMsgParsing["null value in column \"phone_number\""] = "Please input a number"
+    errorMsgParsing["null value in column \"student_number\""] = "Please add a student number"
+    errorMsgParsing["student_number_format"] = "Please follow student number format XXXX-XXXXX"
+    errorMsgParsing["null value in column \"start_date\""] = "Please input a entry date for the employment history"
+    errorMsgParsing["null value in column \"end_date\" "] = "Please input a end date for the employment history"
+    errorMsgParsing["time field value out of range"] = "Please input valid date"
+    errorMsgParsing["null value in column \"employer\" "] = "Please input an employer"
+    errorMsgParsing["null value in column \"last_position_held\" "] = "Please input last position held"
+    errorMsgParsing["duplicate key value violates unique constraint \"upsealumni_student_number_key\""] = "Student number already in system"
+    errorMsgParsing["invalid input syntax for type integer: \"false\""] = "Please input a valid year"
+    errorMsgParsing["null value in column \"year_started\""] = "Please input year started"
+    errorMsgParsing["invalid input syntax for type integer: \"wrong\""] = "Please input valid year"
+    errorMsgParsing["null value in column \"semester_started\""] = "Please select which semester started"
+    errorMsgParsing["null value in column \"current_email\""] = "Please input an email"
+    // errorMsgParsing["null value in column "] = "Please input year started"
+    // errorMsgParsing["null value in column "] = "Please input year started"
+    // errorMsgParsing["null value in column "] = "Please input year started"
+    // errorMsgParsing["null value in column "] = "Please input year started"
+    
     const fetched = await response.json();
+    const errorMsg = fetched["error"]
     console.log("Server Response:", fetched);
-
+    if (errorMsg != "None"){
+      for (key in errorMsgParsing){
+        if (errorMsg.includes(key)){
+          alert(errorMsgParsing[key])
+      }
+      }     
+    }
   } catch (err) {
     console.log("error adding alumni:", err);
   }
