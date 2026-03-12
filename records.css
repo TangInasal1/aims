@@ -227,3 +227,76 @@ main > div:first-child {
   background-color: #02451C;
   color: #fff;
 }
+
+.user-controls {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    gap: 10px; 
+    padding-right: 1.5vw;
+}
+
+.profile-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background-color: #e5e5e5; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.profile-btn:hover {
+    background-color: #d4d4d4;
+}
+
+.profile-btn i {
+    color: #000; 
+    font-size: 16px;
+}
+
+.user-controls {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    gap: 12px;
+    padding-right: 20px;
+}
+
+.profile-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.admin-panel {
+    display: none; 
+    position: absolute;
+    right: 20px;
+    top: 7.5vh;
+    width: 220px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 15px;
+    z-index: 1000;
+}
+
+.admin-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    font-size: 14px;
+    color: #333;
+}
