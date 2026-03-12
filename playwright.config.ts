@@ -48,10 +48,10 @@ export default defineConfig({
       name: 'frontend-webkit',
       use: { ...devices['Desktop Safari'] },
     },
-    {
-      name: 'backend',
-      use: {},                           
-    },
+    // {
+    //   name: 'backend',
+    //   use: {},                           
+    // },
     /* Test against mobile viewports. */
     // {
     //   name: 'Mobile Chrome',
