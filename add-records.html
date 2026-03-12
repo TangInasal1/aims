@@ -9,15 +9,35 @@
 </head>
 
 <body>
-  <!-- HEADER -->
   <header>
-        <img id="upse-logo" src="assets/upse-logo.png" alt="UPSE logo">
-        <h1>Alumni Information Management System</h1>
+    <img id="upse-logo" src="assets/upse-logo.png" alt="UPSE logo">
+    <h1>Alumni Information Management System</h1>
+    <div class="user-controls">
+        <button class="profile-btn" onclick="toggleAdminPanel()">
+            <i class="fas fa-user"></i>
+        </button>
         <div class="logout">
             <p>admin.up.edu.ph</p>
             <img src="assets/logout.png" alt="Logout icon">
         </div>
-    </header>
+    </div>
+  </header>
+
+  <div id="admin-panel" class="admin-panel">
+    <h3>Admin Accounts</h3>
+    <div class="admin-item">
+        <i class="fas fa-user-circle"></i>
+        admin.up.edu.ph
+    </div>
+    <div class="admin-item">
+        <i class="fas fa-user-circle"></i>
+        registrar.up.edu.ph
+    </div>
+    <div class="admin-item">
+        <i class="fas fa-user-circle"></i>
+        alumni.office.up.edu.ph
+    </div>
+  </div>
 
   <div class="nav-container">
     <nav>
@@ -32,10 +52,8 @@
     </button>
   </div>
 
-  <!-- MAIN CONTENT -->
   <div class="main-container">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="sidebar-item active-sidebar" id="sidebar-excel" onclick="showView('excel')">
         <i class="fas fa-file-excel"></i> Excel Import
@@ -117,7 +135,6 @@
           </div>
         </div>
 
-        <!-- Employment History -->
         <div class="section-title">
         Employment History
         <button type="button" class="circle-btn" onclick="addEmployment()">
@@ -153,7 +170,6 @@
         </div>
         </div>
 
-        <!-- Graduate Info -->
         <div class="section-title">
         Graduate Info
         <button type="button" class="circle-btn" onclick="addGraduate()">
@@ -208,7 +224,6 @@
     </div>
 
 </div>
-
 
       </form>
     </section>
