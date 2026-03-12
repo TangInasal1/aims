@@ -255,13 +255,6 @@ async function getAlumnis(){
         "Content-Type": "application/json"
       }
     });
-    
-
-    // result of fetching
-    const fetched = await response.json();
-    console.log(JSON.stringify(fetched));
-    renderAlumniTable(fetched);
-    // console.log(fetched["56"]);
 
     // const fetched = {
     //   '56': {
@@ -294,8 +287,8 @@ async function getAlumnis(){
     //         alumni_id: 56,
     //         employer: 'Tech Corp',
     //         last_position_held: 'Software Engineer',
-    //         start_date: 2019-05-31T16:00:00.000Z,
-    //         end_date: 2022-12-30T16:00:00.000Z,
+    //         start_date: "2019-05-31T16:00:00.000Z",
+    //         end_date: "2022-12-30T16:00:00.000Z",
     //         is_current: false
     //       }
     //     ],
@@ -332,8 +325,8 @@ async function getAlumnis(){
     //         alumni_id: 57,
     //         employer: 'Startup',
     //         last_position_held: 'Quality control',
-    //         start_date: 2019-05-31T16:00:00.000Z,
-    //         end_date: 2022-12-30T16:00:00.000Z,
+    //         start_date: "2019-05-31T16:00:00.000Z",
+    //         end_date: "2022-12-30T16:00:00.000Z",
     //         is_current: true
     //       }
     //     ],
@@ -387,6 +380,11 @@ async function getAlumnis(){
   //     ],
   //   }
   // }
+    
+    // result of fetching
+    const fetched = await response.json();
+    console.log(JSON.stringify(fetched));
+    renderAlumniTable(fetched);
   }
   catch (err){
     console.log("error getting alumni:", err);
@@ -472,6 +470,8 @@ function renderAlumniRow(alumni) {
   const row = document.createElement("div");
   row.className = "alumni-row";
   row.dataset.alumniId = alumni.alumni_id;
+  // store email to make exporting easier
+  row.dataset.email = alumni.current_email || "";
 
   row.innerHTML = `
     <input type="checkbox">
@@ -514,12 +514,63 @@ function formatDate(dateStr) {
   return `${month}/${year}`;
 }
 
-// Once page loads
+// Display alumni table once page loads
 document.addEventListener("DOMContentLoaded", () => {
-  if (document.getElementById("alumni-table-body")) {
+  const tableBody = document.getElementById("alumni-table-body");
+
+  if (tableBody) {
     getAlumnis();
+
+    // Update selected count after checkbox
+    tableBody.addEventListener("change", (e) => {
+      if (e.target.type === "checkbox") updateSelectedCount();
+    });
+  }
+
+  // Header checkbox to select/deselect all alumni entries
+  const headerCheckbox = document.querySelector(".header-checkbox");
+
+  if (headerCheckbox) {
+    headerCheckbox.addEventListener("change", () => {
+      tableBody.querySelectorAll(".alumni-row input[type='checkbox']").forEach(box => {
+        box.checked = headerCheckbox.checked;
+      })
+      updateSelectedCount();
+    })
   }
 });
+
+function updateSelectedCount() {
+  const checked = document.querySelectorAll(".alumni-row input[type='checkbox']:checked");
+  const checkedCount = document.getElementById("selected-label");
+  if (checkedCount) {
+    checkedCount.textContent = `${checked.length}`;
+  }
+}
+
+function exportEmails() {
+  let targetRows = [...document.querySelectorAll(".alumni-row input[type='checkbox']:checked")].map(box => box.closest(".alumni-row"));
+  if (targetRows.length == 0) {
+    targetRows = [...document.querySelectorAll(".alumni-row")];
+  }
+
+  const emails = targetRows.map(row => row.dataset.email).filter(Boolean);
+
+  if (emails.length === 0) {
+    alert("No email addresses found in the selected records.");
+    return;
+  }
+
+  const csv = ["UPSE Alumni Email Addresses", ...emails].join("\n");
+  const blob = new Blob([csv], { type: "text/csv" });
+  const downloadCSV = document.createElement("a");
+  const url = URL.createObjectURL(blob);
+  downloadCSV.href = url;
+  downloadCSV.download = "upse_alumni_emails.csv";
+  downloadCSV.click();
+
+  URL.revokeObjectURL(url);
+}
 
 // Add Records Tab view switching
 function showView(view) {
